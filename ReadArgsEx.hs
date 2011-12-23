@@ -5,7 +5,7 @@ import Data.List
 import ReadArgs
 
 main = do 
-  ( Require n :: Require Int, 
+  ( n :: Int, 
     b :: Maybe String, 
     xs :: [String]) <- readArgs
   print (n,b,xs)

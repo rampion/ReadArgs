@@ -1,34 +1,40 @@
-{-# LANGUAGE TypeSynonymInstances, TypeOperators #-}
+{-# LANGUAGE TypeSynonymInstances, FlexibleInstances, UndecidableInstances, OverlappingInstances, TypeOperators #-}
 module ReadArgs where
 
 import Data.Maybe 
 import Data.List 
+import Data.Typeable 
 
 import System.Environment
 import System.Exit
 import System.IO
+
+-- parse the desired argument tuple from the command line or print
+-- a simple usage statment
+readArgs :: ArgumentTuple a => IO a
+readArgs = do
+  as@(~(a:_)) <- readArgsFrom `fmap` getArgs
+  case as of 
+    [] -> do 
+      progName <- getProgName
+      hPutStrLn stderr $ "usage: " ++ progName ++ usage a
+      exitFailure
+    _ -> return a
 
 -- a class for types that can be parsed from exactly one command line argument
 class Arguable a where
   parse :: String -> Maybe a
   name :: a -> String
 
--- XXX: Ideally, we'd just let any type that is has Read and Typeable
---      instances be types of Arguable, but this would compel all strings to
---      be double quoted.
---      Using UndecidableInstances to resolve this doesn't seem to work either
-instance Arguable Bool where
+-- all types that are typeable and readable can be used as simple arguments
+instance (Typeable t, Read t) => Arguable t where
   parse s = case reads s of
     [(i,"")] -> Just i
     otherwise -> Nothing
-  name _ = "Bool"
+  name t = showsTypeRep (typeOf t) ""
 
-instance Arguable Int where
-  parse s = case reads s of
-    [(i,"")] -> Just i
-    otherwise -> Nothing
-  name _ = "Int"
-
+-- string is a special case, so that we don't force the user to double-quote
+-- their input
 instance Arguable String where
   parse = Just
   name _ = "String"
@@ -39,14 +45,12 @@ class Argument a where
   parseArg :: [String] -> [(a, [String])]
   argName :: a -> String
 
--- use Require when it should be parsed from exactly one
-data Require a = Require { unRequire :: a }
-instance Arguable a => Argument (Require a) where
+instance Arguable a => Argument a where
   parseArg [] = []
   parseArg (s:ss) = do
     a <- maybeToList $ parse s
-    return (Require a, ss)
-  argName = name . unRequire
+    return (a, ss)
+  argName = name
 
 -- use Maybe when it should be parsed from zero or one
 instance Arguable a => Argument (Maybe a) where
@@ -102,15 +106,3 @@ instance (Argument d, Argument c, Argument b, Argument a) => ArgumentTuple (d,c,
     d :& c :& b :& a :& () <- readArgsFrom ss
     return (d,c,b,a)
   usage ~(d,c,b,a) = usage (d :& c :& b :& a :& ())
-
--- parse the desired argument tuple from the command line or print
--- a simple usage statment
-readArgs :: ArgumentTuple a => IO a
-readArgs = do
-  as@(~(a:_)) <- readArgsFrom `fmap` getArgs
-  case as of 
-    [] -> do 
-      progName <- getProgName
-      hPutStrLn stderr $ "usage: " ++ progName ++ usage a
-      exitFailure
-    _ -> return a
