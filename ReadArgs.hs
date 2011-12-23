@@ -106,3 +106,69 @@ instance (Argument d, Argument c, Argument b, Argument a) => ArgumentTuple (d,c,
     d :& c :& b :& a :& () <- readArgsFrom ss
     return (d,c,b,a)
   usage ~(d,c,b,a) = usage (d :& c :& b :& a :& ())
+
+instance (Argument e, Argument d, Argument c, Argument b, Argument a) => ArgumentTuple (e,d,c,b,a) where
+  readArgsFrom ss = do
+    e :& d :& c :& b :& a :& () <- readArgsFrom ss
+    return (e,d,c,b,a)
+  usage ~(e,d,c,b,a) = usage (e :& d :& c :& b :& a :& ())
+
+instance (Argument f, Argument e, Argument d, Argument c, Argument b, Argument a) => ArgumentTuple (f,e,d,c,b,a) where
+  readArgsFrom ss = do
+    f :& e :& d :& c :& b :& a :& () <- readArgsFrom ss
+    return (f,e,d,c,b,a)
+  usage ~(f,e,d,c,b,a) = usage (f :& e :& d :& c :& b :& a :& ())
+
+instance (Argument g, Argument f, Argument e, Argument d, Argument c, Argument b, Argument a) => ArgumentTuple (g,f,e,d,c,b,a) where
+  readArgsFrom ss = do
+    g :& f :& e :& d :& c :& b :& a :& () <- readArgsFrom ss
+    return (g,f,e,d,c,b,a)
+  usage ~(g,f,e,d,c,b,a) = usage (g :& f :& e :& d :& c :& b :& a :& ())
+
+instance (Argument h, Argument g, Argument f, Argument e, Argument d, Argument c, Argument b, Argument a) => ArgumentTuple (h,g,f,e,d,c,b,a) where
+  readArgsFrom ss = do
+    h :& g :& f :& e :& d :& c :& b :& a :& () <- readArgsFrom ss
+    return (h,g,f,e,d,c,b,a)
+  usage ~(h,g,f,e,d,c,b,a) = usage (h :& g :& f :& e :& d :& c :& b :& a :& ())
+
+instance (Argument i, Argument h, Argument g, Argument f, Argument e, Argument d, Argument c, Argument b, Argument a) => ArgumentTuple (i,h,g,f,e,d,c,b,a) where
+  readArgsFrom ss = do
+    i :& h :& g :& f :& e :& d :& c :& b :& a :& () <- readArgsFrom ss
+    return (i,h,g,f,e,d,c,b,a)
+  usage ~(i,h,g,f,e,d,c,b,a) = usage (i :& h :& g :& f :& e :& d :& c :& b :& a :& ())
+
+instance (Argument j, Argument i, Argument h, Argument g, Argument f, Argument e, Argument d, Argument c, Argument b, Argument a) => ArgumentTuple (j,i,h,g,f,e,d,c,b,a) where
+  readArgsFrom ss = do
+    j :& i :& h :& g :& f :& e :& d :& c :& b :& a :& () <- readArgsFrom ss
+    return (j,i,h,g,f,e,d,c,b,a)
+  usage ~(j,i,h,g,f,e,d,c,b,a) = usage (j :& i :& h :& g :& f :& e :& d :& c :& b :& a :& ())
+
+instance (Argument k, Argument j, Argument i, Argument h, Argument g, Argument f, Argument e, Argument d, Argument c, Argument b, Argument a) => ArgumentTuple (k,j,i,h,g,f,e,d,c,b,a) where
+  readArgsFrom ss = do
+    k :& j :& i :& h :& g :& f :& e :& d :& c :& b :& a :& () <- readArgsFrom ss
+    return (k,j,i,h,g,f,e,d,c,b,a)
+  usage ~(k,j,i,h,g,f,e,d,c,b,a) = usage (k :& j :& i :& h :& g :& f :& e :& d :& c :& b :& a :& ())
+
+instance (Argument l, Argument k, Argument j, Argument i, Argument h, Argument g, Argument f, Argument e, Argument d, Argument c, Argument b, Argument a) => ArgumentTuple (l,k,j,i,h,g,f,e,d,c,b,a) where
+  readArgsFrom ss = do
+    l :& k :& j :& i :& h :& g :& f :& e :& d :& c :& b :& a :& () <- readArgsFrom ss
+    return (l,k,j,i,h,g,f,e,d,c,b,a)
+  usage ~(l,k,j,i,h,g,f,e,d,c,b,a) = usage (l :& k :& j :& i :& h :& g :& f :& e :& d :& c :& b :& a :& ())
+
+instance (Argument m, Argument l, Argument k, Argument j, Argument i, Argument h, Argument g, Argument f, Argument e, Argument d, Argument c, Argument b, Argument a) => ArgumentTuple (m,l,k,j,i,h,g,f,e,d,c,b,a) where
+  readArgsFrom ss = do
+    m :& l :& k :& j :& i :& h :& g :& f :& e :& d :& c :& b :& a :& () <- readArgsFrom ss
+    return (m,l,k,j,i,h,g,f,e,d,c,b,a)
+  usage ~(m,l,k,j,i,h,g,f,e,d,c,b,a) = usage (m :& l :& k :& j :& i :& h :& g :& f :& e :& d :& c :& b :& a :& ())
+
+instance (Argument n, Argument m, Argument l, Argument k, Argument j, Argument i, Argument h, Argument g, Argument f, Argument e, Argument d, Argument c, Argument b, Argument a) => ArgumentTuple (n,m,l,k,j,i,h,g,f,e,d,c,b,a) where
+  readArgsFrom ss = do
+    n :& m :& l :& k :& j :& i :& h :& g :& f :& e :& d :& c :& b :& a :& () <- readArgsFrom ss
+    return (n,m,l,k,j,i,h,g,f,e,d,c,b,a)
+  usage ~(n,m,l,k,j,i,h,g,f,e,d,c,b,a) = usage (n :& m :& l :& k :& j :& i :& h :& g :& f :& e :& d :& c :& b :& a :& ())
+
+instance (Argument o, Argument n, Argument m, Argument l, Argument k, Argument j, Argument i, Argument h, Argument g, Argument f, Argument e, Argument d, Argument c, Argument b, Argument a) => ArgumentTuple (o,n,m,l,k,j,i,h,g,f,e,d,c,b,a) where
+  readArgsFrom ss = do
+    o :& n :& m :& l :& k :& j :& i :& h :& g :& f :& e :& d :& c :& b :& a :& () <- readArgsFrom ss
+    return (o,n,m,l,k,j,i,h,g,f,e,d,c,b,a)
+  usage ~(o,n,m,l,k,j,i,h,g,f,e,d,c,b,a) = usage (o :& n :& m :& l :& k :& j :& i :& h :& g :& f :& e :& d :& c :& b :& a :& ())
