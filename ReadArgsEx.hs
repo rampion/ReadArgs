@@ -5,7 +5,9 @@ import Data.List
 import ReadArgs
 
 main = do 
-  ( n :: Int, 
-    b :: Maybe String, 
-    xs :: [String]) <- readArgs
-  print (n,b,xs)
+  ( a :: Int, 
+    b :: Maybe Bool, 
+    cs :: [Bool],
+    d :: Maybe Bool,
+    e :: Bool) <- readArgs
+  print (a,b,cs,d,e)

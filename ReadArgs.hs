@@ -9,8 +9,8 @@ import System.Environment
 import System.Exit
 import System.IO
 
--- parse the desired argument tuple from the command line or print
--- a simple usage statment
+-- parse the desired argument tuple from the command line or 
+-- print a simple usage statment and quit
 readArgs :: ArgumentTuple a => IO a
 readArgs = do
   as@(~(a:_)) <- readArgsFrom `fmap` getArgs
@@ -58,7 +58,7 @@ instance Arguable a => Argument (Maybe a) where
   parseArg [] = [(Nothing, [])]
   parseArg ss'@(s:ss) = case parse s of
     Nothing -> [(Nothing, ss')]
-    justA   -> [(justA, ss)]
+    justA   -> [(justA, ss),(Nothing,ss')]
 
 -- use a list when it should be parsed from zero or more
 instance Arguable a => Argument [a] where
