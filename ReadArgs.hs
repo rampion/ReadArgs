@@ -1,6 +1,8 @@
 {-# LANGUAGE TypeSynonymInstances, FlexibleInstances, UndecidableInstances, OverlappingInstances, TypeOperators #-}
 module ReadArgs where
 
+import Control.Arrow (first)
+
 import Data.Maybe 
 import Data.List 
 import Data.Typeable 
@@ -45,6 +47,7 @@ class Argument a where
   parseArg :: [String] -> [(a, [String])]
   argName :: a -> String
 
+-- use the arguable tyep to just parse a single argument
 instance Arguable a => Argument a where
   parseArg [] = []
   parseArg (s:ss) = do
@@ -52,7 +55,7 @@ instance Arguable a => Argument a where
     return (a, ss)
   argName = name
 
--- use Maybe when it should be parsed from zero or one
+-- use Maybe when it should be parsed from one or zero (greedily)
 instance Arguable a => Argument (Maybe a) where
   argName ~(Just x) = "["++name x++"]"
   parseArg [] = [(Nothing, [])]
@@ -60,11 +63,17 @@ instance Arguable a => Argument (Maybe a) where
     Nothing -> [(Nothing, ss')]
     justA   -> [(justA, ss),(Nothing,ss')]
 
--- use a list when it should be parsed from zero or more
+-- use a list when it should be parsed from zero or more (greedily)
 instance Arguable a => Argument [a] where
   argName ~(x:_) = "["++name x ++"...]"
-  parseArg ss = inits ss' `zip` tails ss
+  parseArg ss = reverse $ inits ss' `zip` tails ss
     where ss' = map fromJust . takeWhile isJust $ map parse ss
+
+-- use NonGreedy when it should be parsed non-greedily
+newtype NonGreedy m a = NonGreedy { unNonGreedy :: m a }
+instance Argument (m a) => Argument (NonGreedy m a) where
+  argName ~(NonGreedy m) = argName m
+  parseArg = map (first NonGreedy) . reverse . parseArg
 
 -- make sure strings are handled as a separate type, not a list of chars
 instance Argument String where
