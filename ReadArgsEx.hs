@@ -6,8 +6,8 @@ import ReadArgs
 
 main = do 
   ( a :: Int, 
-    b :: Maybe Bool, 
-    cs :: [Bool],
-    d :: Maybe Bool,
-    e :: Bool) <- readArgs
+    b :: Maybe String, 
+    cs :: [String],
+    d :: Maybe String,
+    e :: String) <- readArgs
   print (a,b,cs,d,e)

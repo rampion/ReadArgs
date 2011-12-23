@@ -66,6 +66,14 @@ instance Arguable a => Argument [a] where
   parseArg ss = inits ss' `zip` tails ss
     where ss' = map fromJust . takeWhile isJust $ map parse ss
 
+-- make sure strings are handled as a separate type, not a list of chars
+instance Argument String where
+  parseArg [] = []
+  parseArg (s:ss) = do
+    a <- maybeToList $ parse s
+    return (a, ss)
+  argName = name
+
 -- a class for tuples of types that can be parsed from the entire list
 -- of arguments
 class ArgumentTuple a where
