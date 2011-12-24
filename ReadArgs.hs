@@ -21,9 +21,9 @@ readArgs = getArgs >>= readArgsFrom
 -- (so you can do option parsing first)
 readArgsFrom :: ArgumentTuple a => [String] -> IO a
 readArgsFrom ss = 
-  let as@(~(a:_)) = parseArgsFrom ss 
-  in case as of 
-    [] -> do 
+  let ma@(~(Just a)) = parseArgsFrom ss 
+  in case ma of 
+    Nothing -> do 
       progName <- getProgName
       hPutStrLn stderr $ "usage: " ++ progName ++ usageFor a
       exitFailure
@@ -96,24 +96,24 @@ instance Argument String where
 -- a class for tuples of types that can be parsed from the entire list
 -- of arguments
 class ArgumentTuple a where
-  parseArgsFrom :: [String] -> [a]
+  parseArgsFrom :: [String] -> Maybe a
   -- usageFor's argument will usually be undefined, so when defining instances of
   -- Arguable, it should be lazy in its argument
   usageFor :: a -> String
 
 -- use () for no arguments
 instance ArgumentTuple () where
-  parseArgsFrom [] = [()]
-  parseArgsFrom _ = []
+  parseArgsFrom [] = Just ()
+  parseArgsFrom _ = Nothing
   usageFor = const ""
 
 -- use :& to construct arbitrary length tuples of any parsable arguments
 data a :& b = a :& b
 infixr 5 :&
 instance (Argument a, ArgumentTuple y) => ArgumentTuple (a :& y) where
-  parseArgsFrom ss = do
+  parseArgsFrom ss = listToMaybe $ do
     (a, ss') <- parseArg ss
-    y <- parseArgsFrom ss'
+    y <- maybeToList $ parseArgsFrom ss'
     return $ a :& y
   usageFor ~(a :& y) = " " ++ argName a  ++ usageFor y
 
