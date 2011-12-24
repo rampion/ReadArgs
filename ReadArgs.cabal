@@ -53,7 +53,10 @@ Library
   Build-depends: 
     base
   
-Executable ReadArgsSpec
+Test-Suite ReadArgsSpec
+  type:
+    exitcode-stdio-1.0
+
   Main-Is:
     ReadArgsSpec.hs
 
