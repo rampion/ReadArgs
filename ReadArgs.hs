@@ -49,6 +49,13 @@ instance Arguable String where
   parse = Just
   name _ = "String"
 
+-- char is a special case, so that we don't force the user to single-quote
+-- their input
+instance Arguable Char where
+  parse [x] = Just x
+  parse xs = Nothing
+  name _ = "Char"
+
 -- a class for types that can be parsed from some number of command line
 -- arguments
 class Argument a where
@@ -80,7 +87,7 @@ instance Arguable a => Argument [a] where
     where ss' = map fromJust . takeWhile isJust $ map parse ss
 
 -- use NonGreedy when it should be parsed non-greedily
-newtype NonGreedy m a = NonGreedy { unNonGreedy :: m a }
+newtype NonGreedy m a = NonGreedy { unNonGreedy :: m a } deriving (Show, Eq)
 instance Argument (m a) => Argument (NonGreedy m a) where
   argName ~(NonGreedy m) = argName m
   parseArg = map (first NonGreedy) . reverse . parseArg
@@ -108,7 +115,7 @@ instance ArgumentTuple () where
   usageFor = const ""
 
 -- use :& to construct arbitrary length tuples of any parsable arguments
-data a :& b = a :& b
+data a :& b = a :& b deriving (Show, Eq)
 infixr 5 :&
 instance (Argument a, ArgumentTuple y) => ArgumentTuple (a :& y) where
   parseArgsFrom ss = listToMaybe $ do
