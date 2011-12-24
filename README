@@ -1,0 +1,3 @@
+This is a simple library for command line argument parsing for haskell.
+
+You can see a simple example of use in ReadArgsEx.hs, and a fuller list of features in ReadArgsSpec.hs.
