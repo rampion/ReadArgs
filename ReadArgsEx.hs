@@ -1,7 +1,6 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 module Main where
 
-import Data.List
 import ReadArgs
 
 -- try running this  with a couple sample inputs
