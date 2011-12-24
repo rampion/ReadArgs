@@ -4,6 +4,8 @@ module Main where
 import ReadArgs
 
 -- try running this  with a couple sample inputs
+--  % ReadArgsEx
+--  usage: ReadArgsEx [Char] String [Int...] Char
 --  % ReadArgsEx hello x
 --  (Nothing, "hello", [], 'x')
 --  % ReadArgsEx a hello x
