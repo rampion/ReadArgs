@@ -11,14 +11,14 @@ import System.Environment
 import System.Exit
 import System.IO
 
--- parse the desired argument tuple from the command line or 
--- print a simple usage statment and quit
+-- |parse the desired argument tuple from the command line or 
+--  print a simple usage statment and quit
 readArgs :: ArgumentTuple a => IO a
 readArgs = getArgs >>= readArgsFrom
 
--- read args from the given strings or 
--- print a simple usage statment and quit
--- (so you can do option parsing first)
+-- |read args from the given strings or 
+--  print a simple usage statment and quit
+--  (so you can do option parsing first)
 readArgsFrom :: ArgumentTuple a => [String] -> IO a
 readArgsFrom ss = 
   let ma@(~(Just a)) = parseArgsFrom ss 
@@ -29,42 +29,42 @@ readArgsFrom ss =
       exitFailure
     _ -> return a
 
--- a class for types that can be parsed from exactly one command line argument
+-- |a class for types that can be parsed from exactly one command line argument
 class Arguable a where
   parse :: String -> Maybe a
-  -- name's argument will usually be undefined, so when defining instances of
+  -- |name's argument will usually be undefined, so when defining instances of
   -- Arguable, it should be lazy in its argument
   name :: a -> String
 
--- all types that are typeable and readable can be used as simple arguments
+-- |all types that are typeable and readable can be used as simple arguments
 instance (Typeable t, Read t) => Arguable t where
   parse s = case reads s of
     [(i,"")] -> Just i
     otherwise -> Nothing
   name t = showsTypeRep (typeOf t) ""
 
--- string is a special case, so that we don't force the user to double-quote
+-- |string is a special case, so that we don't force the user to double-quote
 -- their input
 instance Arguable String where
   parse = Just
   name _ = "String"
 
--- char is a special case, so that we don't force the user to single-quote
+-- |char is a special case, so that we don't force the user to single-quote
 -- their input
 instance Arguable Char where
   parse [x] = Just x
   parse xs = Nothing
   name _ = "Char"
 
--- a class for types that can be parsed from some number of command line
+-- |a class for types that can be parsed from some number of command line
 -- arguments
 class Argument a where
   parseArg :: [String] -> [(a, [String])]
-  -- argName's argument will usually be undefined, so when defining instances of
+  -- |argName's argument will usually be undefined, so when defining instances of
   -- Arguable, it should be lazy in its argument
   argName :: a -> String
 
--- use the arguable tyep to just parse a single argument
+-- |use the arguable tyep to just parse a single argument
 instance Arguable a => Argument a where
   parseArg [] = []
   parseArg (s:ss) = do
@@ -72,7 +72,7 @@ instance Arguable a => Argument a where
     return (a, ss)
   argName = name
 
--- use Maybe when it should be parsed from one or zero (greedily)
+-- |use Maybe when it should be parsed from one or zero (greedily)
 instance Arguable a => Argument (Maybe a) where
   argName ~(Just x) = "["++name x++"]"
   parseArg [] = [(Nothing, [])]
@@ -80,19 +80,21 @@ instance Arguable a => Argument (Maybe a) where
     Nothing -> [(Nothing, ss')]
     justA   -> [(justA, ss),(Nothing,ss')]
 
--- use a list when it should be parsed from zero or more (greedily)
+-- |use a list when it should be parsed from zero or more (greedily)
 instance Arguable a => Argument [a] where
   argName ~(x:_) = "["++name x ++"...]"
   parseArg ss = reverse $ inits ss' `zip` tails ss
     where ss' = map fromJust . takeWhile isJust $ map parse ss
 
--- use NonGreedy when it should be parsed non-greedily
+-- |a wrapper type to indicate a non-greedy list or maybe
 newtype NonGreedy m a = NonGreedy { unNonGreedy :: m a } deriving (Show, Eq)
+-- |use NonGreedy when it should be parsed non-greedily
+--  (e.g. @(NonGreedy xs :: NonGreedy [] Int, x :: Maybe Float) <- readArgs@)
 instance Argument (m a) => Argument (NonGreedy m a) where
   argName ~(NonGreedy m) = argName m
   parseArg = map (first NonGreedy) . reverse . parseArg
 
--- make sure strings are handled as a separate type, not a list of chars
+-- |make sure strings are handled as a separate type, not a list of chars
 instance Argument String where
   parseArg [] = []
   parseArg (s:ss) = do
@@ -100,21 +102,21 @@ instance Argument String where
     return (a, ss)
   argName = name
 
--- a class for tuples of types that can be parsed from the entire list
+-- |a class for tuples of types that can be parsed from the entire list
 -- of arguments
 class ArgumentTuple a where
   parseArgsFrom :: [String] -> Maybe a
-  -- usageFor's argument will usually be undefined, so when defining instances of
+  -- |usageFor's argument will usually be undefined, so when defining instances of
   -- Arguable, it should be lazy in its argument
   usageFor :: a -> String
 
--- use () for no arguments
+-- |use () for no arguments
 instance ArgumentTuple () where
   parseArgsFrom [] = Just ()
   parseArgsFrom _ = Nothing
   usageFor = const ""
 
--- use :& to construct arbitrary length tuples of any parsable arguments
+-- |use :& to construct arbitrary length tuples of any parsable arguments
 data a :& b = a :& b deriving (Show, Eq)
 infixr 5 :&
 instance (Argument a, ArgumentTuple y) => ArgumentTuple (a :& y) where
