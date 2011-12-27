@@ -70,7 +70,7 @@ Library
   Exposed-modules:     ReadArgs
 
   Build-depends: 
-    base
+    base >= 4.3.1.0 && < 5
   
 Test-Suite ReadArgsSpec
   type:
@@ -80,8 +80,12 @@ Test-Suite ReadArgsSpec
     ReadArgsSpec.hs
 
   Build-depends:       
-    hspec
+    hspec >= 0.9,
+    base >= 4.3.1.0 && < 5
   
 Executable ReadArgsEx
   Main-Is:
     ReadArgsEx.hs
+
+  Build-depends: 
+    base >= 4.3.1.0 && < 5
