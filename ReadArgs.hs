@@ -126,6 +126,13 @@ instance (Argument a, ArgumentTuple y) => ArgumentTuple (a :& y) where
     return $ a :& y
   usageFor ~(a :& y) = " " ++ argName a  ++ usageFor y
 
+-- Use :& to derive an instance for single arguments
+instance (Argument a) => ArgumentTuple a where
+  parseArgsFrom ss = do
+    a :& () <- parseArgsFrom ss
+    return a
+  usageFor a = usageFor (a :& ())
+
 -- Use :& to derive instances for all the normal tuple types
 instance (Argument b, Argument a) => ArgumentTuple (b,a) where
   parseArgsFrom ss = do
