@@ -79,6 +79,17 @@ specs = describe "parseArgsFrom"
   , it "can parse adjacent sets of variable arguments" (
       parseArgsFrom ["1", "2", "a", "b"] == Just ([1,2] :: [Int], ["a","b"] :: [String])
     )
+  , it "can parse a single argument without tuples" (
+      parseArgsFrom ["3"] == Just (3 :: Int)
+    )
+  , it "can parse an optional argument without tuples" (
+      parseArgsFrom ["3"] == Just (Just 3 :: Maybe Int) &&
+      parseArgsFrom [] == Just (Nothing :: Maybe Int)
+    )
+  , it "can parse a variable argument without tuples" (
+      parseArgsFrom ["1","2","3"] == Just ([1,2,3] :: [Int]) &&
+      parseArgsFrom [] == Just ([] :: [Int])
+    )
   ]
 
 main = hspec specs
