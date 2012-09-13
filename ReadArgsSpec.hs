@@ -3,6 +3,7 @@ module Main where
 
 import Test.Hspec
 import ReadArgs
+import Data.Text (pack)
 
 specs :: Specs
 specs = describe "parseArgsFrom" 
@@ -17,6 +18,9 @@ specs = describe "parseArgsFrom"
     )
   , it "can parse a string without double quotes" (
       parseArgsFrom ["abe", "bar"] == Just ("abe", "bar")
+    )
+  , it "can parse text without double quotes" (
+      parseArgsFrom ["abe", "bar"] == Just (pack "abe", pack "bar")
     )
   , it "can parse a character without single quotes" (
       parseArgsFrom ["a", "b"] == Just ('a','b')

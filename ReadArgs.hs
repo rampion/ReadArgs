@@ -7,6 +7,8 @@ import Data.Maybe
 import Data.List 
 import Data.Typeable 
 
+import Data.Text (Text, pack)
+
 import System.Environment
 import System.Exit
 import System.IO
@@ -48,6 +50,12 @@ instance (Typeable t, Read t) => Arguable t where
 instance Arguable String where
   parse = Just
   name _ = "String"
+
+-- |Text is a special case, so that we don't force the user to double-quote
+-- their input
+instance Arguable Text where
+  parse = Just . pack
+  name _ = "Text"
 
 -- |char is a special case, so that we don't force the user to single-quote
 -- their input
