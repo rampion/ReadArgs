@@ -4,6 +4,7 @@ module Main where
 import Test.Hspec
 import ReadArgs
 import Data.Text (pack)
+import Filesystem.Path.CurrentOS (fromText)
 
 specs :: Specs
 specs = describe "parseArgsFrom" 
@@ -21,6 +22,9 @@ specs = describe "parseArgsFrom"
     )
   , it "can parse text without double quotes" (
       parseArgsFrom ["abe", "bar"] == Just (pack "abe", pack "bar")
+    )
+  , it "can parse a filepath  without double quotes" (
+      parseArgsFrom ["abe", "bar"] == Just (fromText $ pack "abe", fromText $ pack "bar")
     )
   , it "can parse a character without single quotes" (
       parseArgsFrom ["a", "b"] == Just ('a','b')

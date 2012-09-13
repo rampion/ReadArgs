@@ -8,10 +8,13 @@ import Data.List
 import Data.Typeable 
 
 import Data.Text (Text, pack)
+import Filesystem.Path (FilePath)
+import Filesystem.Path.CurrentOS (fromText)
+import Prelude hiding (FilePath)
 
 import System.Environment
 import System.Exit
-import System.IO
+import System.IO hiding (FilePath)
 
 -- |parse the desired argument tuple from the command line or 
 --  print a simple usage statment and quit
@@ -56,6 +59,12 @@ instance Arguable String where
 instance Arguable Text where
   parse = Just . pack
   name _ = "Text"
+
+-- |FilePath is a special case, so that we don't force the user to double-quote
+-- their input
+instance Arguable FilePath where
+  parse = Just . fromText . pack
+  name _ = "FilePath"
 
 -- |char is a special case, so that we don't force the user to single-quote
 -- their input
