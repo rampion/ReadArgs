@@ -1,11 +1,11 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 module Main where
 
-import Test.Hspec
+import Test.Hspec.Core
 import ReadArgs
 
 specs :: Specs
-specs = describe "parseArgsFrom" 
+specs = [describe "parseArgsFrom"
   [ it "can parse zero arguments" (
       parseArgsFrom [] == Just ()
     )
@@ -90,6 +90,6 @@ specs = describe "parseArgsFrom"
       parseArgsFrom ["1","2","3"] == Just ([1,2,3] :: [Int]) &&
       parseArgsFrom [] == Just ([] :: [Int])
     )
-  ]
+  ]]
 
 main = hspec specs
