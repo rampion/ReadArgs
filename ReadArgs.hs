@@ -40,7 +40,7 @@ class Arguable a where
 instance (Typeable t, Read t) => Arguable t where
   parse s = case reads s of
     [(i,"")] -> Just i
-    otherwise -> Nothing
+    _        -> Nothing
   name t = showsTypeRep (typeOf t) ""
 
 -- |string is a special case, so that we don't force the user to double-quote
@@ -53,7 +53,7 @@ instance Arguable String where
 -- their input
 instance Arguable Char where
   parse [x] = Just x
-  parse xs = Nothing
+  parse _ = Nothing
   name _ = "Char"
 
 -- |a class for types that can be parsed from some number of command line

@@ -91,4 +91,5 @@ specs = do
       parseArgsFrom ["1","2","3"] == Just ([1,2,3] :: [Int]) &&
       parseArgsFrom [] == Just ([] :: [Int])
 
+main :: IO ()
 main = hspec specs
