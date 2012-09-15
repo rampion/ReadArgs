@@ -4,8 +4,8 @@ module Main where
 import Test.Hspec
 import ReadArgs
 
-specs :: Spec
-specs = do
+spec :: Spec
+spec = do
   describe "parseArgsFrom" $ do
     it "can parse zero arguments" $ do
       parseArgsFrom [] `shouldBe` Just ()
@@ -81,4 +81,4 @@ specs = do
       parseArgsFrom [] `shouldBe` Just ([] :: [Int])
 
 main :: IO ()
-main = hspec specs
+main = hspec spec
