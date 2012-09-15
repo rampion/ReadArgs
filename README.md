@@ -15,9 +15,10 @@ action would be:
     usage: Example Int String Float
 
 Any type that has both Typeable and Read instances
-can be used.  Both Char and String are handled specially so that
+can be used. Char, String, and Text are handled specially so that
 command line arguments for both do not require quotes (as their 
-Read instances do).
+Read instances do). A special instance is provided for FilePath so 
+that no constructor or quotes are required.
 
 readArgs also supports optional arguments and variadic arguments.
 Optional arguments are specified using Maybe, and variadic arguments 
